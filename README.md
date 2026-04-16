@@ -110,3 +110,13 @@
 **内容**：6组图片，每组三行：输入原图、真值标注、模型预测。这些是验证集中IoU最低的样本。
 <img width="2700" height="1350" alt="failure_cases" src="https://github.com/user-attachments/assets/67de4f98-46a5-4ae6-94ae-dcf439e2e6a8" />
 模型的失败案例集中在**小目标、遮挡、低对比度、复杂场景、密集同类物重叠**等问题上。
+
+## CRF 后处理优化
+
+为进一步提升分割边界的精细度，在模型输出后引入了 **Dense CRF** 作为后处理模块。CRF 利用原始图像的像素颜色和位置信息，对模型输出的粗略分割图进行边界优化。
+
+### 优化效果
+
+在 Pascal VOC 2012 全量验证集（1449 张）上测试：
+<img width="807" height="169" alt="image" src="https://github.com/user-attachments/assets/25c8e26d-3d97-45e1-897c-9eee89e9ae3d" />
+
