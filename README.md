@@ -19,6 +19,7 @@
 - **数据集**: Pascal VOC 2012
 - **最佳 mIoU**: 0.6599
 - **模型权重**：‘best_pspnet.pth’
+- **改进**：ASPP并联改进，最终得到mIoU为0.709（未上传模型权重）
   
 ## 测试输出
 
@@ -120,3 +121,27 @@
 在 Pascal VOC 2012 全量验证集（1449 张）上测试：
 <img width="807" height="169" alt="image" src="https://github.com/user-attachments/assets/25c8e26d-3d97-45e1-897c-9eee89e9ae3d" />
 
+## CBAM 注意力模块改进
+
+为进一步提升模型的特征表达能力，在 PSPNet 的金字塔池化模块（PPM）之前引入了 **CBAM（Convolutional Block Attention Module）** 注意力机制。CBAM 通过通道注意力和空间注意力的串联结构，自适应地增强关键特征、抑制无关信息。
+<img width="1525" height="538" alt="image" src="https://github.com/user-attachments/assets/7bead164-b141-49ea-ab62-29e4db551724" />
+
+
+### 结果分析
+
+- **正向提升**：CBAM 的加入使 mIoU 略有提升，验证了注意力机制在该任务上的有效性。
+- **提升幅度较小的原因**：
+  1. 基线模型已达到较高水平（65.99%），进一步优化空间有限
+  2. PSPNet 自带的 PPM 模块已具备多尺度上下文融合能力，与 CBAM 存在一定功能重叠
+
+## ASPP 并联 PPM 模块改进
+
+在 CBAM 注意力机制的基础上，进一步引入了 **ASPP（空洞空间金字塔池化）** 模块，并将其与原有的 PPM（金字塔池化模块）**并联融合**，以增强模型的多尺度上下文捕捉能力。
+
+- **PPM** 通过不同尺度的平均池化捕捉全局和区域上下文，但对小物体和细节的保留能力有限。
+- **ASPP** 通过不同膨胀率的空洞卷积，在不损失分辨率的前提下扩大感受野，能更好地保留小物体和边界细节。
+- 二者并联可以实现**优势互补**：PPM 提供全局场景先验，ASPP 增强局部细节和多尺度特征。
+
+ ### 结果分析
+- **显著提升**：ASPP+PPM 并联结构带来了约 5% 的 mIoU 提升（提升至0.709），是本次实验中效果最显著的改进。
+  <img width="771" height="420" alt="image" src="https://github.com/user-attachments/assets/a2b41f5e-e9f0-4097-ae08-165b36fdcd7e" />
