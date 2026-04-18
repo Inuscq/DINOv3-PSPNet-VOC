@@ -121,6 +121,7 @@
 在 Pascal VOC 2012 全量验证集（1449 张）上测试：
 <img width="807" height="169" alt="image" src="https://github.com/user-attachments/assets/25c8e26d-3d97-45e1-897c-9eee89e9ae3d" />
 
+
 ## CBAM 注意力模块改进
 
 为进一步提升模型的特征表达能力，在 PSPNet 的金字塔池化模块（PPM）之前引入了 **CBAM（Convolutional Block Attention Module）** 注意力机制。CBAM 通过通道注意力和空间注意力的串联结构，自适应地增强关键特征、抑制无关信息。
@@ -131,7 +132,7 @@
 
 - **正向提升**：CBAM 的加入使 mIoU 略有提升，验证了注意力机制在该任务上的有效性。
 - **提升幅度较小的原因**：
-  1. 基线模型已达到较高水平（65.99%），进一步优化空间有限
+  1. 基线模型已达到较高水平（0.6599），进一步优化空间有限
   2. PSPNet 自带的 PPM 模块已具备多尺度上下文融合能力，与 CBAM 存在一定功能重叠
 
 ## ASPP 并联 PPM 模块改进
@@ -145,3 +146,10 @@
  ### 结果分析
 - **显著提升**：ASPP+PPM 并联结构带来了约 5% 的 mIoU 提升（提升至0.709），是本次实验中效果最显著的改进。
   <img width="771" height="420" alt="image" src="https://github.com/user-attachments/assets/a2b41f5e-e9f0-4097-ae08-165b36fdcd7e" />
+
+## CRF 后处理优化
+在 ASPP+PPM 并联模型的基础上，进一步应用 **Dense CRF** 后处理，对分割边界进行精细化优化（全量集验证）。
+<img width="612" height="226" alt="image" src="https://github.com/user-attachments/assets/ab20cd98-4daa-4c86-a9fa-0528e44aecc0" />
+
+### 结果分析
+ **CRF 的增益**：在 ASPP+PPM 模型基础上，CRF 后处理将全量平均 mIoU 从 0.6302提升至 0.6614，带来了约 **0.0312**（约5%） 的提升。
